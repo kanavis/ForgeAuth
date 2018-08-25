@@ -19,21 +19,24 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import pw.kanavis.forgelogin.StateStorage;
 
 
 public class AuthCommand extends CommandBase {
 
     private Logger logger;
     private AuthProvider auth;
+    private StateStorage storage;
 
     public static final Style STYLE_OK   = new Style().setBold(true).setColor(TextFormatting.GREEN);
     public static final Style STYLE_WARN = new Style().setBold(true).setColor(TextFormatting.YELLOW);
     public static final Style STYLE_ERR  = new Style().setBold(true).setColor(TextFormatting.RED);
 
-    public AuthCommand(Logger logger, AuthProvider authProvider) {
+    public AuthCommand(Logger logger, AuthProvider authProvider, StateStorage storage) {
 
         this.logger = logger;
         this.auth = authProvider;
+        this.storage = storage;
     }
 
     private void chatReply(ICommandSender sender, ITextComponent textComponent) {
@@ -102,6 +105,7 @@ public class AuthCommand extends CommandBase {
                     if (authResult.isOk()) {
                         // Player authorized
                         authPlayer.setAuthorized(true);
+                        storage.unAnchorEntity(senderEntity);
                         logger.info("User {} authorized.", login);
                         chatReply(sender, new TextComponentString("You have been logged in.").setStyle(STYLE_OK));
                     } else if (authResult.isInitial()) {

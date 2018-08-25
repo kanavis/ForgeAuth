@@ -17,10 +17,11 @@ import pw.kanavis.forgelogin.auth.PasswordCommand;
 public class ForgeLogin {
     public static final String MODID = "forgelogin";
     public static final String NAME = "Forge Login";
-    public static final String VERSION = "0.1";
+    public static final String VERSION = "0.2";
 
     private static Logger logger;
     private static AuthProvider authProvider;
+    private static StateStorage storage;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -34,13 +35,17 @@ public class ForgeLogin {
         // Obtain auth provider
         logger.debug("Initializing auth provider");
         authProvider = new AuthProvider();
+
+        // Obtain auth provider
+        logger.debug("Initializing state storage");
+        storage = new StateStorage();
     }
 
     @EventHandler
     public void serverStart(FMLServerStartingEvent event) {
         // Register server commands
         logger.debug(">>>>ForgeLogin: registering commands");
-        event.registerServerCommand(new AuthCommand(logger, authProvider));
+        event.registerServerCommand(new AuthCommand(logger, authProvider, storage));
         event.registerServerCommand(new PasswordCommand(logger, authProvider));
     }
 
@@ -48,6 +53,6 @@ public class ForgeLogin {
     public void init(FMLInitializationEvent event) {
         // Register events
         logger.debug(">>>>ForgeLogin: registering events");
-        MinecraftForge.EVENT_BUS.register( new MainEventHandler(logger) );
+        MinecraftForge.EVENT_BUS.register( new MainEventHandler(logger, storage) );
     }
 }
