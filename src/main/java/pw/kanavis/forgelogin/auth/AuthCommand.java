@@ -102,6 +102,7 @@ public class AuthCommand extends CommandBase {
                     if (authResult.isOk()) {
                         // Player authorized
                         authPlayer.setAuthorized(true);
+                        logger.info("User {} authorized.", login);
                         chatReply(sender, new TextComponentString("You have been logged in.").setStyle(STYLE_OK));
                     } else if (authResult.isInitial()) {
                         // Player is initial

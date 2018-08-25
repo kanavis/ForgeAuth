@@ -72,6 +72,7 @@ public class PasswordCommand extends CommandBase {
     private void setPassword(ICommandSender sender, String login, String password) {
         try {
             this.auth.setPassword(login, password);
+            logger.info("User {} updated password.", login);
             chatReply(sender, new TextComponentString("Password set").setStyle(STYLE_OK));
         } catch (IOException e) {
             this.logger.error("Auth file IO exception: {}", e.getMessage());

@@ -13,7 +13,6 @@ import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
 import pw.kanavis.forgelogin.auth.AuthDataHandler;
-import pw.kanavis.forgelogin.auth.AuthProvider;
 
 
 public class MainEventHandler {
@@ -28,7 +27,6 @@ public class MainEventHandler {
         this.logger.debug(">>>>ForgeLogin: Initializing MainEventHandler");
     }
 
-
     /**
      * PlayerInteract event handler:
      * fired when entity interacts an entity and prohibits it for a non-logged-in player
@@ -37,8 +35,6 @@ public class MainEventHandler {
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getEntity() instanceof EntityPlayer) {
             AuthDataHandler.IAuthHandler authPlayer = AuthDataHandler.getHandler(event.getEntity());
-            logger.info("DBG PlayerInteractEvent {} {} {}", event.getEntity().getName(),
-                    event.getEntity().getEntityId(), authPlayer.getAuthorized());
             if (!authPlayer.getAuthorized()) {
                 if (event.isCancelable())
                     event.setCanceled(true);
@@ -55,8 +51,6 @@ public class MainEventHandler {
         Entity trueSource = event.getSource().getTrueSource();
         if (trueSource instanceof EntityPlayer) {
             AuthDataHandler.IAuthHandler authPlayer = AuthDataHandler.getHandler(trueSource);
-            logger.info("DBG LivingAttackEvent {} {} {} {}", trueSource, event.getEntity().getName(),
-                    event.getEntity().getEntityId(), authPlayer.getAuthorized());
             if (!authPlayer.getAuthorized()) {
                 if (event.isCancelable())
                     event.setCanceled(true);
@@ -70,8 +64,6 @@ public class MainEventHandler {
     @SubscribeEvent(priority = EventPriority.NORMAL, receiveCanceled = false)
     public void onServerChat(ServerChatEvent event) {
         AuthDataHandler.IAuthHandler authPlayer = AuthDataHandler.getHandler(event.getPlayer());
-        logger.info("DBG ServerChatEvent {} {} {}", event.getPlayer().getName(),
-                event.getPlayer().getEntityId(), authPlayer.getAuthorized());
         if (!authPlayer.getAuthorized()) {
             // Player not authorized, deny chat
             if (event.isCancelable())
@@ -87,7 +79,7 @@ public class MainEventHandler {
      public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
          AuthDataHandler.IAuthHandler authPlayer = AuthDataHandler.getHandler(event.player);
          authPlayer.setAuthorized(false);
-         logger.info(">>>> ForgeLogin: Player connected: {} id: {}", event.player.getName(),
+         logger.info(">>>> Player connected: {} id: {}", event.player.getName(),
                  event.player.getEntityId());
          event.player.sendMessage( new TextComponentString("You need to login!") );
          event.player.sendMessage( new TextComponentString("/login <password>") );
