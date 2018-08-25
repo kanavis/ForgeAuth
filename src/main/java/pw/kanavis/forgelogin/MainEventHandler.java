@@ -1,8 +1,7 @@
 package pw.kanavis.forgelogin;
 
+import org.apache.logging.log4j.Logger;
 
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,12 +9,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-import org.apache.logging.log4j.Logger;
-import pw.kanavis.forgelogin.auth.IAuthHandler;
-import pw.kanavis.forgelogin.auth.AuthProvider;
+
+import pw.kanavis.forgelogin.auth.AuthDataHandler;
 
 
 public class MainEventHandler {
@@ -30,38 +27,15 @@ public class MainEventHandler {
         this.logger.debug(">>>>ForgeLogin: Initializing MainEventHandler");
     }
 
-    /**
-     * Get auth handler
-     */
-    public static IAuthHandler getAuthHandler(Entity entity) {
-        if (entity.hasCapability(AuthProvider.CAPABILITY_FORGELOGIN, EnumFacing.DOWN)) {
-            return entity.getCapability(AuthProvider.CAPABILITY_FORGELOGIN, EnumFacing.DOWN);
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * AttachCapabilities event:
-     * fired when new entity is created while attaching caps.
-     */
-    @SubscribeEvent
-    public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
-        // Attach auth event to player entity
-        if (event.getObject() instanceof EntityPlayer) {
-            event.addCapability(new ResourceLocation("forgelogin", "auth"),
-                    new AuthProvider());
-        }
-    }
 
     /**
      * PlayerInteract event handler:
      * fired when entity interacts an entity and prohibits it for a non-logged-in player
      */
     @SubscribeEvent(priority = EventPriority.NORMAL, receiveCanceled = false)
-    public void onEvent(PlayerInteractEvent event) {
+    public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getEntity() instanceof EntityPlayer) {
-            IAuthHandler authPlayer = getAuthHandler(event.getEntity());
+            AuthDataHandler.IAuthHandler authPlayer = AuthDataHandler.getHandler(event.getEntity());
             logger.info("DBG PlayerInteractEvent {} {} {}", event.getEntity().getName(),
                     event.getEntity().getEntityId(), authPlayer.getAuthorized());
             if (!authPlayer.getAuthorized()) {
@@ -76,10 +50,10 @@ public class MainEventHandler {
      * fired when entity attacks an entity and prohibits it for a non-logged-in player
      */
     @SubscribeEvent(priority = EventPriority.NORMAL, receiveCanceled = false)
-    public void onEvent(LivingAttackEvent event) {
+    public void onLivingAttack(LivingAttackEvent event) {
         Entity trueSource = event.getSource().getTrueSource();
         if (trueSource instanceof EntityPlayer) {
-            IAuthHandler authPlayer = getAuthHandler(trueSource);
+            AuthDataHandler.IAuthHandler authPlayer = AuthDataHandler.getHandler(trueSource);
             logger.info("DBG LivingAttackEvent {} {} {}", event.getEntity().getName(),
                     event.getEntity().getEntityId(), authPlayer.getAuthorized());
             if (!authPlayer.getAuthorized()) {
@@ -95,8 +69,8 @@ public class MainEventHandler {
      * ServerChat event handler
      */
     @SubscribeEvent(priority = EventPriority.NORMAL, receiveCanceled = false)
-    public void onEvent(ServerChatEvent event) {
-        IAuthHandler authPlayer = getAuthHandler(event.getPlayer());
+    public void onServerChat(ServerChatEvent event) {
+        AuthDataHandler.IAuthHandler authPlayer = AuthDataHandler.getHandler(event.getPlayer());
         logger.info("DBG ServerChatEvent {} {} {}", event.getPlayer().getName(),
                 event.getPlayer().getEntityId(), authPlayer.getAuthorized());
         if (!authPlayer.getAuthorized()) {
@@ -111,7 +85,7 @@ public class MainEventHandler {
      * PlayerLoggedIn event handler
     */
      @SubscribeEvent(priority = EventPriority.NORMAL, receiveCanceled = true)
-     public void onEvent(PlayerLoggedInEvent event) {
+     public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
          logger.info(">>>> ForgeLogin: Player connected: {} id: {}", event.player.getName(),
                  event.player.getEntityId());
          event.player.sendMessage( new TextComponentString("You need to login!") );

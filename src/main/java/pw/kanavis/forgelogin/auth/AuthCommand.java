@@ -1,4 +1,4 @@
-package pw.kanavis.forgelogin;
+package pw.kanavis.forgelogin.auth;
 
 
 import java.util.ArrayList;
@@ -12,7 +12,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import pw.kanavis.forgelogin.auth.IAuthHandler;
 
 
 public class AuthCommand extends CommandBase {
@@ -56,7 +55,7 @@ public class AuthCommand extends CommandBase {
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-        IAuthHandler authPlayer = MainEventHandler.getAuthHandler(sender.getCommandSenderEntity());
+        AuthDataHandler.IAuthHandler authPlayer = AuthDataHandler.getHandler(sender.getCommandSenderEntity());
         if (authPlayer.getAuthorized()) {
             // Already authorized
             throw new CommandException("Already logged in");

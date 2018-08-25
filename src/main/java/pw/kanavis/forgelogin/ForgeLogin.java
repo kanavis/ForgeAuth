@@ -3,14 +3,12 @@ package pw.kanavis.forgelogin;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.Logger;
-import pw.kanavis.forgelogin.auth.IAuthHandler;
-import pw.kanavis.forgelogin.auth.BasicAuthHandler;
-import pw.kanavis.forgelogin.auth.AuthStorage;
+import pw.kanavis.forgelogin.auth.AuthDataHandler;
+import pw.kanavis.forgelogin.auth.AuthCommand;
 
 
 @Mod(modid = ForgeLogin.MODID, name = ForgeLogin.NAME, version = ForgeLogin.VERSION)
@@ -28,7 +26,7 @@ public class ForgeLogin {
 
         // Register auth capability
         logger.debug(">>>>ForgeLogin: registering caps");
-        CapabilityManager.INSTANCE.register(IAuthHandler.class, new AuthStorage(), BasicAuthHandler.class);
+        AuthDataHandler.register();
     }
 
     @EventHandler
