@@ -1,0 +1,16 @@
+[
+{
+  "modid": "forgelogin",
+  "name": "Forge Login",
+  "description": "Forge local login module",
+  "version": "1.0",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["kanavis"],
+  "credits": "Lick a crocodile.",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
