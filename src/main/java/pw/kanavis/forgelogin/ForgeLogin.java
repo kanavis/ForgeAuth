@@ -9,15 +9,18 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.Logger;
 import pw.kanavis.forgelogin.auth.AuthDataHandler;
 import pw.kanavis.forgelogin.auth.AuthCommand;
+import pw.kanavis.forgelogin.auth.AuthProvider;
+import pw.kanavis.forgelogin.auth.PasswordCommand;
 
 
-@Mod(modid = ForgeLogin.MODID, name = ForgeLogin.NAME, version = ForgeLogin.VERSION)
+@Mod(modid = ForgeLogin.MODID, name = ForgeLogin.NAME, version = ForgeLogin.VERSION, acceptableRemoteVersions = "*")
 public class ForgeLogin {
     public static final String MODID = "forgelogin";
     public static final String NAME = "Forge Login";
-    public static final String VERSION = "1.0";
+    public static final String VERSION = "0.1";
 
     private static Logger logger;
+    private static AuthProvider authProvider;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -25,15 +28,20 @@ public class ForgeLogin {
         logger = event.getModLog();
 
         // Register auth capability
-        logger.debug(">>>>ForgeLogin: registering caps");
+        logger.debug("Registering caps");
         AuthDataHandler.register();
+
+        // Obtain auth provider
+        logger.debug("Initializing auth provider");
+        authProvider = new AuthProvider();
     }
 
     @EventHandler
     public void serverStart(FMLServerStartingEvent event) {
         // Register server commands
         logger.debug(">>>>ForgeLogin: registering commands");
-        event.registerServerCommand(new AuthCommand(logger));
+        event.registerServerCommand(new AuthCommand(logger, authProvider));
+        event.registerServerCommand(new PasswordCommand(logger, authProvider));
     }
 
     @EventHandler

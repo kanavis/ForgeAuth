@@ -13,6 +13,7 @@ import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
 import pw.kanavis.forgelogin.auth.AuthDataHandler;
+import pw.kanavis.forgelogin.auth.AuthProvider;
 
 
 public class MainEventHandler {
@@ -54,13 +55,11 @@ public class MainEventHandler {
         Entity trueSource = event.getSource().getTrueSource();
         if (trueSource instanceof EntityPlayer) {
             AuthDataHandler.IAuthHandler authPlayer = AuthDataHandler.getHandler(trueSource);
-            logger.info("DBG LivingAttackEvent {} {} {}", event.getEntity().getName(),
+            logger.info("DBG LivingAttackEvent {} {} {} {}", trueSource, event.getEntity().getName(),
                     event.getEntity().getEntityId(), authPlayer.getAuthorized());
             if (!authPlayer.getAuthorized()) {
                 if (event.isCancelable())
                     event.setCanceled(true);
-            } else {
-                logger.info("WWWA");
             }
         }
     }
@@ -86,6 +85,8 @@ public class MainEventHandler {
     */
      @SubscribeEvent(priority = EventPriority.NORMAL, receiveCanceled = true)
      public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
+         AuthDataHandler.IAuthHandler authPlayer = AuthDataHandler.getHandler(event.player);
+         authPlayer.setAuthorized(false);
          logger.info(">>>> ForgeLogin: Player connected: {} id: {}", event.player.getName(),
                  event.player.getEntityId());
          event.player.sendMessage( new TextComponentString("You need to login!") );

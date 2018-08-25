@@ -68,6 +68,10 @@ public class AuthDataHandler {
 
         private boolean authorized;
 
+        public DefaultAuthHandler() {
+            this.authorized = false;
+        }
+
         @Override
         public boolean getAuthorized () {
             return this.authorized;
