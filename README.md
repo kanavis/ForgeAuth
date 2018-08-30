@@ -8,7 +8,7 @@ Currently, only whitelist strategy is available, adding users via creating files
 **How to use:**
 > Module creates forgelogin_data/auth directory inside minecraft working dir.
 
-> To add user, create a file \<username\>.data inisde this directory.
+> To add user, create a file \<username_in_lowercase\>.data inisde this directory.
 
 > If file is empty, user may set his password with **/password \<password\>** command.
 
