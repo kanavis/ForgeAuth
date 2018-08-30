@@ -28,9 +28,9 @@ public class AuthCommand extends CommandBase {
     private AuthProvider auth;
     private StateStorage storage;
 
-    public static final Style STYLE_OK   = new Style().setBold(true).setColor(TextFormatting.GREEN);
-    public static final Style STYLE_WARN = new Style().setBold(true).setColor(TextFormatting.YELLOW);
-    public static final Style STYLE_ERR  = new Style().setBold(true).setColor(TextFormatting.RED);
+    public static final Style STYLE_OK   = new Style().setColor(TextFormatting.GREEN);
+    public static final Style STYLE_WARN = new Style().setColor(TextFormatting.YELLOW);
+    public static final Style STYLE_ERR  = new Style().setColor(TextFormatting.RED);
 
     public AuthCommand(Logger logger, AuthProvider authProvider, StateStorage storage) {
 

@@ -25,8 +25,8 @@ public class PasswordCommand extends CommandBase {
     private Logger logger;
     private AuthProvider auth;
 
-    public static final Style STYLE_OK   = new Style().setBold(true).setColor(TextFormatting.GREEN);
-    public static final Style STYLE_ERR  = new Style().setBold(true).setColor(TextFormatting.RED);
+    public static final Style STYLE_OK   = new Style().setColor(TextFormatting.GREEN);
+    public static final Style STYLE_ERR  = new Style().setColor(TextFormatting.RED);
 
     public PasswordCommand(Logger logger, AuthProvider authProvider) {
 
