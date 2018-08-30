@@ -3,7 +3,7 @@
   "modid": "forgelogin",
   "name": "Forge Login",
   "description": "Forge local login module",
-  "version": "0.2",
+  "version": "0.3",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",

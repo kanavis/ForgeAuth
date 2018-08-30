@@ -17,7 +17,7 @@ import pw.kanavis.forgelogin.auth.PasswordCommand;
 public class ForgeLogin {
     public static final String MODID = "forgelogin";
     public static final String NAME = "Forge Login";
-    public static final String VERSION = "0.2";
+    public static final String VERSION = "0.3";
 
     private static Logger logger;
     private static AuthProvider authProvider;
