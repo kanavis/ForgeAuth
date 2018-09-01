@@ -11,13 +11,15 @@ import pw.kanavis.forgelogin.auth.AuthDataHandler;
 import pw.kanavis.forgelogin.auth.AuthCommand;
 import pw.kanavis.forgelogin.auth.AuthProvider;
 import pw.kanavis.forgelogin.auth.PasswordCommand;
+import pw.kanavis.forgelogin.event.CancelledEvents;
+import pw.kanavis.forgelogin.event.MainEventHandler;
 
 
 @Mod(modid = ForgeLogin.MODID, name = ForgeLogin.NAME, version = ForgeLogin.VERSION, acceptableRemoteVersions = "*")
 public class ForgeLogin {
     public static final String MODID = "forgelogin";
     public static final String NAME = "Forge Login";
-    public static final String VERSION = "0.3";
+    public static final String VERSION = "0.4";
 
     private static Logger logger;
     private static AuthProvider authProvider;
@@ -53,6 +55,7 @@ public class ForgeLogin {
     public void init(FMLInitializationEvent event) {
         // Register events
         logger.debug(">>>>ForgeLogin: registering events");
+        MinecraftForge.EVENT_BUS.register( new CancelledEvents(logger));
         MinecraftForge.EVENT_BUS.register( new MainEventHandler(logger, storage) );
     }
 }
